@@ -88,7 +88,11 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
       justify-content: center;
       overflow: hidden;
       position: relative;
+      /* Oculto hasta que las fuentes estén listas — evita el freeze inicial */
+      opacity: 0;
+      transition: opacity 0.6s ease;
     }
+    body.ready { opacity: 1; }
 
     /* ── Gradient background — capas de profundidad y marca ───── */
     body::before {
@@ -497,6 +501,11 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
 
     update();
     const interval = setInterval(update, 1000);
+
+    // ── Reveal suave — espera a que las fuentes estén listas ────
+    document.fonts.ready.then(() => {
+      setTimeout(() => document.body.classList.add('ready'), 60);
+    });
   </script>
 
 </body>
