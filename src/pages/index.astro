@@ -1,17 +1,503 @@
 ---
-
+const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hora canónica de lanzamiento
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Qualier Internacional — Pronto</title>
+  <meta name="description" content="Medio siglo construyendo confianza. Una nueva marca para liderar el futuro." />
+  <meta property="og:title" content="Qualier Internacional — Pronto" />
+  <meta property="og:description" content="Algo importante está por llegar." />
+  <meta property="og:image" content="/logo.png" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/png" href="/isotipo.png" />
+
+  <style>
+    /* ── Fonts ────────────────────────────────────────────────── */
+    @font-face {
+      font-family: 'Raleway';
+      src: url('/fonts/Raleway-Light.ttf') format('truetype');
+      font-weight: 300; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Raleway';
+      src: url('/fonts/Raleway-Regular.ttf') format('truetype');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Raleway';
+      src: url('/fonts/Raleway-Medium.ttf') format('truetype');
+      font-weight: 500; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Raleway';
+      src: url('/fonts/Raleway-SemiBold.ttf') format('truetype');
+      font-weight: 600; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Raleway';
+      src: url('/fonts/Raleway-Bold.ttf') format('truetype');
+      font-weight: 700; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Graphik';
+      src: url('/fonts/Graphik-Light.otf') format('opentype');
+      font-weight: 300; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Graphik';
+      src: url('/fonts/Graphik-Regular.otf') format('opentype');
+      font-weight: 400; font-style: normal; font-display: swap;
+    }
+    @font-face {
+      font-family: 'Graphik';
+      src: url('/fonts/Graphik-Medium.otf') format('opentype');
+      font-weight: 500; font-style: normal; font-display: swap;
+    }
+
+    /* ── Reset & Base ─────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue-primary:   #325094;
+      --blue-dark:      #203061;
+      --blue-mid:       #5d97c4;
+      --blue-light:     #72b4e1;
+      --teal:           #427f89;
+      --green:          #459452;
+      --green-apple:    #bfd067;
+      --yellow:         #fbd849;
+      --grey-light:     #c7c8ca;
+    }
+
+    html, body { height: 100%; width: 100%; }
+
+    body {
+      font-family: 'Graphik', 'Inter', system-ui, sans-serif;
+      /* Fondo casi negro con tinte azul marino profundo — contrasta con el logo en color */
+      background-color: #060d1a;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ── Gradient background — capas de profundidad y marca ───── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        /* Halo azul de marca top-left */
+        radial-gradient(ellipse 65% 55% at -5% 0%,   rgba(50,80,148,0.38)  0%, transparent 55%),
+        /* Halo teal bottom-right */
+        radial-gradient(ellipse 55% 50% at 105% 105%, rgba(0,77,78,0.45)   0%, transparent 55%),
+        /* Brillo central muy sutil — evita flatness total */
+        radial-gradient(ellipse 80% 60% at 50% 50%,  rgba(20,35,80,0.5)    0%, transparent 70%);
+      z-index: 0;
+    }
+
+
+    /* ── Layout ───────────────────────────────────────────────── */
+    .page {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 2rem 1.5rem;
+      gap: 2.2rem;
+      text-align: center;
+    }
+
+    /* ── Logo ─────────────────────────────────────────────────── */
+    .logo-wrap {
+      animation: fadeDown 0.9s ease both;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .logo-wrap img {
+      /* Desktop: protagonista, doble del tamaño anterior */
+      width: auto;
+      height: auto;
+      max-height: clamp(160px, 26vw, 320px);
+      max-width: min(760px, 88vw);
+      object-fit: contain;
+      /* Sombra más pronunciada para separarlo del fondo */
+      filter: drop-shadow(0 8px 48px rgba(0,0,0,0.6)) drop-shadow(0 2px 12px rgba(50,80,148,0.3));
+    }
+
+    @media (max-width: 600px) {
+      .logo-wrap img {
+        /* Mobile: 80% del ancho, sin restricción de altura */
+        width: 80vw;
+        max-width: 80vw;
+        max-height: none;
+      }
+    }
+
+    /* ── Divider ──────────────────────────────────────────────── */
+    .divider {
+      width: min(320px, 70vw);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(114,180,225,0.5), rgba(191,208,103,0.5), transparent);
+      animation: fadeIn 1.2s ease 0.3s both;
+    }
+
+    /* ── Headline ─────────────────────────────────────────────── */
+    .headline {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 300;
+      font-size: clamp(1.05rem, 3vw, 1.5rem);
+      letter-spacing: 0.06em;
+      color: rgba(255,255,255,0.75);
+      max-width: 580px;
+      line-height: 1.6;
+      animation: fadeUp 0.9s ease 0.2s both;
+    }
+    .headline strong {
+      font-weight: 600;
+      color: rgba(255,255,255,0.92);
+    }
+
+    /* ── Claim ────────────────────────────────────────────────── */
+    .claim {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: clamp(1.35rem, 4.2vw, 2.5rem);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      color: #fff;
+      max-width: 700px;
+      animation: fadeUp 0.9s ease 0.4s both;
+    }
+    .claim .accent {
+      background: linear-gradient(90deg, var(--blue-light), var(--green-apple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ── Countdown ────────────────────────────────────────────── */
+    .countdown-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      animation: fadeUp 0.9s ease 0.6s both;
+    }
+
+    .countdown-label {
+      font-family: 'Graphik', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--blue-light);
+    }
+
+    .countdown {
+      display: flex;
+      gap: clamp(0.8rem, 3vw, 2rem);
+      align-items: flex-start;
+    }
+
+    .time-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .time-value {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.8rem, 10vw, 5.5rem);
+      line-height: 1;
+      color: #fff;
+      min-width: 2ch;
+      letter-spacing: -0.02em;
+      text-shadow: 0 2px 32px rgba(114,180,225,0.3);
+      transition: transform 0.15s ease;
+    }
+    .time-value.tick { transform: scale(1.04); }
+
+    .time-label {
+      font-family: 'Graphik', sans-serif;
+      font-size: clamp(0.6rem, 1.5vw, 0.72rem);
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--grey-light);
+    }
+
+    .separator {
+      font-family: 'Raleway', sans-serif;
+      font-size: clamp(2.4rem, 8vw, 4.8rem);
+      font-weight: 300;
+      color: rgba(114,180,225,0.4);
+      line-height: 1;
+      padding-top: 0.05em;
+      animation: blink 1s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.2; }
+    }
+
+    /* ── Timezone badge ───────────────────────────────────────── */
+    .tz-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 0.4rem 1.1rem;
+      font-family: 'Graphik', sans-serif;
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.65);
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    .footer {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-family: 'Graphik', sans-serif;
+      font-size: 0.68rem;
+      color: rgba(255,255,255,0.22);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      z-index: 1;
+      animation: fadeIn 1.5s ease 1s both;
+    }
+
+    /* ── Launched state ───────────────────────────────────────── */
+    .launched-msg {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+    .launched-msg h2 {
+      font-family: 'Raleway', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      color: #fff;
+      animation: fadeUp 0.8s ease both;
+    }
+    .launched-msg p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.6);
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+
+    /* ── Animations ───────────────────────────────────────────── */
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── Responsive ───────────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .page { gap: 1.6rem; }
+      .countdown { gap: 0.6rem; }
+      .iso-deco.iso-tr { width: 200px; }
+      .iso-deco.iso-bl { width: 110px; }
+    }
+  </style>
+</head>
+<body>
+
+
+  <main class="page">
+
+    <!-- Logo principal color (protagonista) -->
+    <div class="logo-wrap">
+      <img src="/logo.png" alt="Qualier Internacional" />
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Headline teaser -->
+    <p class="headline">
+      Algo <strong>importante</strong> está por llegar.
+    </p>
+
+    <!-- Claim -->
+    <h1 class="claim">
+      Medio siglo construyendo confianza.<br />
+      <span class="accent">Una nueva marca para liderar el futuro.</span>
+    </h1>
+
+    <!-- Countdown -->
+    <div class="countdown-wrapper">
+      <span class="countdown-label">Lanzamiento oficial</span>
+
+      <div class="countdown" id="countdown">
+        <div class="time-block">
+          <span class="time-value" id="cd-days">--</span>
+          <span class="time-label">Días</span>
+        </div>
+        <span class="separator">:</span>
+        <div class="time-block">
+          <span class="time-value" id="cd-hours">--</span>
+          <span class="time-label">Horas</span>
+        </div>
+        <span class="separator">:</span>
+        <div class="time-block">
+          <span class="time-value" id="cd-minutes">--</span>
+          <span class="time-label">Minutos</span>
+        </div>
+        <span class="separator">:</span>
+        <div class="time-block">
+          <span class="time-value" id="cd-seconds">--</span>
+          <span class="time-label">Segundos</span>
+        </div>
+      </div>
+
+      <!-- Timezone badge (sin emoji de bandera para evitar "CO" en Windows) -->
+      <div class="tz-badge">
+        <span>El <strong>25 de mayo</strong> a las</span>
+        <span id="tz-local-time">9:00 a. m.</span>
+        <span>hora</span>
+        <span id="tz-name">local</span>
+      </div>
+    </div>
+
+    <!-- Mensaje post-lanzamiento -->
+    <div class="launched-msg" id="launched-msg">
+      <h2>¡Ya es oficial!</h2>
+      <p>Bienvenidos a Qualier Internacional.<br />Los de siempre, evolucionados.</p>
+    </div>
+
+  </main>
+
+  <footer class="footer">
+    qualierinternacional.com &nbsp;·&nbsp; Proyecto Horizonte 2026
+  </footer>
+
+  <script define:vars={{ launchISO }}>
+    const LAUNCH = new Date(launchISO);
+
+    // ── Timezone detection ──────────────────────────────────────
+    function detectTimezone() {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        const tzNames = {
+          'America/Caracas':                'Venezuela',
+          'America/Bogota':                 'Colombia',
+          'America/Panama':                 'Panamá',
+          'America/Santo_Domingo':          'Rep. Dominicana',
+          'America/New_York':               'ET (USA)',
+          'America/Chicago':                'CT (USA)',
+          'America/Denver':                 'MT (USA)',
+          'America/Los_Angeles':            'PT (USA)',
+          'America/Mexico_City':            'México',
+          'America/Guayaquil':              'Ecuador',
+          'America/Lima':                   'Perú',
+          'America/Santiago':               'Chile',
+          'America/Argentina/Buenos_Aires': 'Argentina',
+          'America/Sao_Paulo':              'Brasil',
+          'Europe/Madrid':                  'España',
+          'Europe/London':                  'UK',
+        };
+
+        const name = tzNames[tz] ?? 'tu zona horaria';
+        const localTime = LAUNCH.toLocaleTimeString('es', {
+          timeZone: tz,
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        });
+
+        return { name, localTime };
+      } catch {
+        return { name: 'tu zona horaria', localTime: '9:00 a. m.' };
+      }
+    }
+
+    // ── Countdown ───────────────────────────────────────────────
+    const pad = n => String(n).padStart(2, '0');
+
+    const elDays     = document.getElementById('cd-days');
+    const elHours    = document.getElementById('cd-hours');
+    const elMins     = document.getElementById('cd-minutes');
+    const elSecs     = document.getElementById('cd-seconds');
+    const elLaunched = document.getElementById('launched-msg');
+    const elCdWrap   = document.querySelector('.countdown-wrapper');
+    const elHeadline = document.querySelector('.headline');
+
+    let prevSecs = null;
+
+    function tickAnim(el) {
+      el.classList.add('tick');
+      setTimeout(() => el.classList.remove('tick'), 150);
+    }
+
+    function update() {
+      const diff = LAUNCH - Date.now();
+
+      if (diff <= 0) {
+        elCdWrap.style.display = 'none';
+        elHeadline.textContent = '¡Bienvenidos!';
+        elLaunched.style.display = 'flex';
+        clearInterval(interval);
+        return;
+      }
+
+      const totalSecs = Math.floor(diff / 1000);
+      const days  = Math.floor(totalSecs / 86400);
+      const hours = Math.floor((totalSecs % 86400) / 3600);
+      const mins  = Math.floor((totalSecs % 3600) / 60);
+      const secs  = totalSecs % 60;
+
+      if (secs !== prevSecs) {
+        tickAnim(elSecs);
+        if (prevSecs !== null && secs === 59) tickAnim(elMins);
+        if (prevSecs !== null && secs === 59 && mins === 59) tickAnim(elHours);
+        prevSecs = secs;
+      }
+
+      elDays.textContent  = days;
+      elHours.textContent = pad(hours);
+      elMins.textContent  = pad(mins);
+      elSecs.textContent  = pad(secs);
+    }
+
+    // ── Timezone badge ──────────────────────────────────────────
+    const tzInfo = detectTimezone();
+    document.getElementById('tz-local-time').textContent = tzInfo.localTime;
+    document.getElementById('tz-name').textContent       = tzInfo.name;
+
+    update();
+    const interval = setInterval(update, 1000);
+  </script>
+
+</body>
 </html>
