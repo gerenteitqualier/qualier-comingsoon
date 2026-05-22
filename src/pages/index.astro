@@ -1,5 +1,5 @@
 ---
-const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hora canónica de lanzamiento
+const launchISO = "2026-06-01T10:00:00-05:00"; // 10 AM Colombia (UTC-5)
 ---
 
 <!DOCTYPE html>
@@ -17,348 +17,679 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
   <link rel="icon" type="image/png" href="/isotipo.png" />
 
   <style>
-    /* ── Fonts ────────────────────────────────────────────────── */
-    @font-face {
-      font-family: 'Raleway';
-      src: url('/fonts/Raleway-Light.ttf') format('truetype');
-      font-weight: 300; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Raleway';
-      src: url('/fonts/Raleway-Regular.ttf') format('truetype');
-      font-weight: 400; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Raleway';
-      src: url('/fonts/Raleway-Medium.ttf') format('truetype');
-      font-weight: 500; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Raleway';
-      src: url('/fonts/Raleway-SemiBold.ttf') format('truetype');
-      font-weight: 600; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Raleway';
-      src: url('/fonts/Raleway-Bold.ttf') format('truetype');
-      font-weight: 700; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Graphik';
-      src: url('/fonts/Graphik-Light.otf') format('opentype');
-      font-weight: 300; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Graphik';
-      src: url('/fonts/Graphik-Regular.otf') format('opentype');
-      font-weight: 400; font-style: normal; font-display: swap;
-    }
-    @font-face {
-      font-family: 'Graphik';
-      src: url('/fonts/Graphik-Medium.otf') format('opentype');
-      font-weight: 500; font-style: normal; font-display: swap;
-    }
+    @font-face { font-family:'Raleway'; src:url('/fonts/Raleway-Light.ttf') format('truetype'); font-weight:300; font-display:swap; }
+    @font-face { font-family:'Raleway'; src:url('/fonts/Raleway-Regular.ttf') format('truetype'); font-weight:400; font-display:swap; }
+    @font-face { font-family:'Raleway'; src:url('/fonts/Raleway-Medium.ttf') format('truetype'); font-weight:500; font-display:swap; }
+    @font-face { font-family:'Raleway'; src:url('/fonts/Raleway-SemiBold.ttf') format('truetype'); font-weight:600; font-display:swap; }
+    @font-face { font-family:'Raleway'; src:url('/fonts/Raleway-Bold.ttf') format('truetype'); font-weight:700; font-display:swap; }
+    @font-face { font-family:'Graphik'; src:url('/fonts/Graphik-Light.otf') format('opentype'); font-weight:300; font-display:swap; }
+    @font-face { font-family:'Graphik'; src:url('/fonts/Graphik-Regular.otf') format('opentype'); font-weight:400; font-display:swap; }
+    @font-face { font-family:'Graphik'; src:url('/fonts/Graphik-Medium.otf') format('opentype'); font-weight:500; font-display:swap; }
 
-    /* ── Reset & Base ─────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
 
     :root {
-      --blue-primary:   #325094;
-      --blue-dark:      #203061;
-      --blue-mid:       #5d97c4;
-      --blue-light:     #72b4e1;
-      --teal:           #427f89;
-      --green:          #459452;
-      --green-apple:    #bfd067;
-      --yellow:         #fbd849;
-      --grey-light:     #c7c8ca;
+      --blue-primary: #325094;
+      --blue-dark:    #203061;
+      --blue-mid:     #5d97c4;
+      --blue-light:   #72b4e1;
+      --teal:         #427f89;
+      --green:        #459452;
+      --green-apple:  #bfd067;
+      --yellow:       #fbd849;
+      --grey-light:   #c7c8ca;
     }
 
-    html, body { height: 100%; width: 100%; }
+    html, body { width:100%; }
 
     body {
-      font-family: 'Graphik', 'Inter', system-ui, sans-serif;
-      /* Fondo casi negro con tinte azul marino profundo — contrasta con el logo en color */
-      background-color: #060d1a;
-      color: #fff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-      /* Oculto hasta que las fuentes estén listas — evita el freeze inicial */
-      opacity: 0;
-      transition: opacity 0.6s ease;
+      font-family:'Graphik','Inter',system-ui,sans-serif;
+      background-color:#060d1a;
+      color:#fff;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      overflow-x:hidden;
+      position:relative;
+      opacity:0;
+      transition:opacity 0.6s ease;
     }
-    body.ready { opacity: 1; }
+    body.ready { opacity:1; }
+    body.modal-open { overflow:hidden; }
 
-    /* ── Gradient background — capas de profundidad y marca ───── */
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
+      content:'';
+      position:fixed;
+      inset:0;
       background:
-        /* Halo azul de marca top-left */
-        radial-gradient(ellipse 65% 55% at -5% 0%,   rgba(50,80,148,0.38)  0%, transparent 55%),
-        /* Halo teal bottom-right */
+        radial-gradient(ellipse 65% 55% at -5% 0%,    rgba(50,80,148,0.38) 0%, transparent 55%),
         radial-gradient(ellipse 55% 50% at 105% 105%, rgba(0,77,78,0.45)   0%, transparent 55%),
-        /* Brillo central muy sutil — evita flatness total */
-        radial-gradient(ellipse 80% 60% at 50% 50%,  rgba(20,35,80,0.5)    0%, transparent 70%);
-      z-index: 0;
+        radial-gradient(ellipse 80% 60% at 50% 50%,   rgba(20,35,80,0.5)   0%, transparent 70%);
+      z-index:0;
     }
 
-
-    /* ── Layout ───────────────────────────────────────────────── */
+    /* ── Layout ─────────────────────────────────────────────── */
     .page {
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      width: 100%;
-      padding: 2rem 1.5rem;
-      gap: 2.2rem;
-      text-align: center;
+      position:relative;
+      z-index:1;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      min-height:100vh;
+      width:100%;
+      padding:2.5rem 1.5rem 5rem;
+      gap:clamp(1.4rem, 2.8vw, 2.2rem);
+      text-align:center;
     }
 
-    /* ── Logo ─────────────────────────────────────────────────── */
+    /* ── Logo ───────────────────────────────────────────────── */
     .logo-wrap {
-      animation: fadeDown 0.9s ease both;
-      width: 100%;
-      display: flex;
-      justify-content: center;
+      animation:fadeDown 0.9s ease both;
+      width:100%;
+      display:flex;
+      justify-content:center;
     }
     .logo-wrap img {
-      /* Desktop: protagonista, doble del tamaño anterior */
-      width: auto;
-      height: auto;
-      max-height: clamp(160px, 26vw, 320px);
-      max-width: min(760px, 88vw);
-      object-fit: contain;
-      /* Sombra más pronunciada para separarlo del fondo */
-      filter: drop-shadow(0 8px 48px rgba(0,0,0,0.6)) drop-shadow(0 2px 12px rgba(50,80,148,0.3));
+      width:auto;
+      height:auto;
+      max-height:clamp(130px, 20vw, 300px);
+      max-width:min(720px, 88vw);
+      object-fit:contain;
+      filter:drop-shadow(0 8px 48px rgba(0,0,0,0.6)) drop-shadow(0 2px 12px rgba(50,80,148,0.3));
     }
 
-    @media (max-width: 600px) {
-      .logo-wrap img {
-        /* Mobile: 80% del ancho, sin restricción de altura */
-        width: 80vw;
-        max-width: 80vw;
-        max-height: none;
-      }
-    }
-
-    /* ── Divider ──────────────────────────────────────────────── */
+    /* ── Divider ────────────────────────────────────────────── */
     .divider {
-      width: min(320px, 70vw);
-      height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(114,180,225,0.5), rgba(191,208,103,0.5), transparent);
-      animation: fadeIn 1.2s ease 0.3s both;
+      width:min(320px, 70vw);
+      height:1px;
+      background:linear-gradient(90deg, transparent, rgba(114,180,225,0.5), rgba(191,208,103,0.5), transparent);
+      animation:fadeIn 1.2s ease 0.3s both;
     }
 
-    /* ── Headline ─────────────────────────────────────────────── */
+    /* ── Headline ───────────────────────────────────────────── */
     .headline {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 300;
-      font-size: clamp(1.05rem, 3vw, 1.5rem);
-      letter-spacing: 0.06em;
-      color: rgba(255,255,255,0.75);
-      max-width: 580px;
-      line-height: 1.6;
-      animation: fadeUp 0.9s ease 0.2s both;
+      font-family:'Raleway',sans-serif;
+      font-weight:300;
+      font-size:clamp(1rem, 2.8vw, 1.5rem);
+      letter-spacing:0.06em;
+      color:rgba(255,255,255,0.75);
+      max-width:580px;
+      line-height:1.6;
+      animation:fadeUp 0.9s ease 0.2s both;
     }
-    .headline strong {
-      font-weight: 600;
-      color: rgba(255,255,255,0.92);
-    }
+    .headline strong { font-weight:600; color:rgba(255,255,255,0.92); }
 
-    /* ── Claim ────────────────────────────────────────────────── */
+    /* ── Claim ──────────────────────────────────────────────── */
     .claim {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 700;
-      font-size: clamp(1.35rem, 4.2vw, 2.5rem);
-      line-height: 1.25;
-      letter-spacing: -0.01em;
-      color: #fff;
-      max-width: 700px;
-      animation: fadeUp 0.9s ease 0.4s both;
+      font-family:'Raleway',sans-serif;
+      font-weight:700;
+      font-size:clamp(1.2rem, 3.8vw, 2.4rem);
+      line-height:1.25;
+      letter-spacing:-0.01em;
+      color:#fff;
+      max-width:700px;
+      animation:fadeUp 0.9s ease 0.4s both;
     }
     .claim .accent {
-      background: linear-gradient(90deg, var(--blue-light), var(--green-apple));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      background:linear-gradient(90deg, var(--blue-light), var(--green-apple));
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      background-clip:text;
     }
 
-    /* ── Countdown ────────────────────────────────────────────── */
+    /* ── Countdown ──────────────────────────────────────────── */
     .countdown-wrapper {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-      animation: fadeUp 0.9s ease 0.6s both;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:1rem;
+      animation:fadeUp 0.9s ease 0.6s both;
     }
-
     .countdown-label {
-      font-family: 'Graphik', sans-serif;
-      font-size: 0.72rem;
-      font-weight: 500;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--blue-light);
+      font-family:'Graphik',sans-serif;
+      font-size:0.72rem;
+      font-weight:500;
+      letter-spacing:0.2em;
+      text-transform:uppercase;
+      color:var(--blue-light);
     }
-
     .countdown {
-      display: flex;
-      gap: clamp(0.8rem, 3vw, 2rem);
-      align-items: flex-start;
+      display:flex;
+      gap:clamp(0.6rem, 2.5vw, 2rem);
+      align-items:flex-start;
     }
-
     .time-block {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 0.4rem;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:0.4rem;
     }
-
     .time-value {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 700;
-      font-size: clamp(2.8rem, 10vw, 5.5rem);
-      line-height: 1;
-      color: #fff;
-      min-width: 2ch;
-      letter-spacing: -0.02em;
-      text-shadow: 0 2px 32px rgba(114,180,225,0.3);
-      transition: transform 0.15s ease;
+      font-family:'Raleway',sans-serif;
+      font-weight:700;
+      font-size:clamp(2.4rem, 9vw, 5.5rem);
+      line-height:1;
+      color:#fff;
+      min-width:2ch;
+      letter-spacing:-0.02em;
+      text-shadow:0 2px 32px rgba(114,180,225,0.3);
+      transition:transform 0.15s ease;
     }
-    .time-value.tick { transform: scale(1.04); }
-
+    .time-value.tick { transform:scale(1.04); }
     .time-label {
-      font-family: 'Graphik', sans-serif;
-      font-size: clamp(0.6rem, 1.5vw, 0.72rem);
-      font-weight: 400;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--grey-light);
+      font-family:'Graphik',sans-serif;
+      font-size:clamp(0.58rem, 1.4vw, 0.72rem);
+      font-weight:400;
+      letter-spacing:0.18em;
+      text-transform:uppercase;
+      color:var(--grey-light);
     }
-
     .separator {
-      font-family: 'Raleway', sans-serif;
-      font-size: clamp(2.4rem, 8vw, 4.8rem);
-      font-weight: 300;
-      color: rgba(114,180,225,0.4);
-      line-height: 1;
-      padding-top: 0.05em;
-      animation: blink 1s ease-in-out infinite;
+      font-family:'Raleway',sans-serif;
+      font-size:clamp(2rem, 7.5vw, 4.8rem);
+      font-weight:300;
+      color:rgba(114,180,225,0.4);
+      line-height:1;
+      padding-top:0.05em;
+      animation:blink 1s ease-in-out infinite;
     }
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50%       { opacity: 0.2; }
-    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
 
-    /* ── Timezone badge ───────────────────────────────────────── */
+    /* ── Timezone badge ─────────────────────────────────────── */
     .tz-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 999px;
-      padding: 0.4rem 1.1rem;
-      font-family: 'Graphik', sans-serif;
-      font-size: 0.78rem;
-      color: rgba(255,255,255,0.65);
-      backdrop-filter: blur(8px);
+      display:inline-flex;
+      align-items:center;
+      gap:0.45rem;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:999px;
+      padding:0.4rem 1.1rem;
+      font-family:'Graphik',sans-serif;
+      font-size:0.78rem;
+      color:rgba(255,255,255,0.65);
+      backdrop-filter:blur(8px);
     }
 
-    /* ── Footer ───────────────────────────────────────────────── */
+    /* ── Notify form ────────────────────────────────────────── */
+    .notify-form {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:0.55rem;
+      animation:fadeUp 0.9s ease 0.8s both;
+      width:100%;
+      max-width:clamp(300px, 80vw, 520px);
+    }
+    .notify-row {
+      display:flex;
+      gap:0.55rem;
+      width:100%;
+    }
+    .notify-email-input {
+      flex:1;
+      min-width:0;
+      height:clamp(44px, 5vw, 52px);
+      padding:0 1.1rem;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.13);
+      border-radius:12px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-size:clamp(0.82rem, 1.6vw, 0.95rem);
+      outline:none;
+      transition:border-color 0.2s, background 0.2s, box-shadow 0.2s;
+      backdrop-filter:blur(8px);
+    }
+    .notify-email-input::placeholder { color:rgba(255,255,255,0.28); }
+    .notify-email-input:focus {
+      border-color:rgba(114,180,225,0.5);
+      background:rgba(255,255,255,0.1);
+      box-shadow:0 0 0 3px rgba(114,180,225,0.12);
+    }
+    .notify-btn {
+      display:inline-flex;
+      align-items:center;
+      gap:0.45rem;
+      height:clamp(44px, 5vw, 52px);
+      padding:0 clamp(0.9rem, 2.2vw, 1.5rem);
+      background:linear-gradient(135deg, var(--blue-primary), var(--blue-mid));
+      border:none;
+      border-radius:12px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-weight:500;
+      font-size:clamp(0.8rem, 1.5vw, 0.93rem);
+      letter-spacing:0.02em;
+      cursor:pointer;
+      white-space:nowrap;
+      flex-shrink:0;
+      transition:transform 0.15s, box-shadow 0.15s;
+      box-shadow:0 4px 20px rgba(50,80,148,0.35);
+    }
+    .notify-btn:hover { transform:translateY(-1px); box-shadow:0 6px 28px rgba(50,80,148,0.5); }
+    .notify-btn:active { transform:scale(0.98); }
+    .notify-hint {
+      font-family:'Graphik',sans-serif;
+      font-size:clamp(0.66rem, 1.2vw, 0.74rem);
+      color:rgba(255,255,255,0.28);
+      letter-spacing:0.04em;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────── */
     .footer {
-      position: fixed;
-      bottom: 1.5rem;
-      left: 0;
-      right: 0;
-      text-align: center;
-      font-family: 'Graphik', sans-serif;
-      font-size: 0.68rem;
-      color: rgba(255,255,255,0.22);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      z-index: 1;
-      animation: fadeIn 1.5s ease 1s both;
+      position:fixed;
+      bottom:1.2rem;
+      left:0; right:0;
+      text-align:center;
+      font-family:'Graphik',sans-serif;
+      font-size:0.66rem;
+      color:rgba(255,255,255,0.2);
+      letter-spacing:0.12em;
+      text-transform:uppercase;
+      z-index:1;
+      animation:fadeIn 1.5s ease 1s both;
     }
 
-    /* ── Launched state ───────────────────────────────────────── */
-    .launched-msg {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
+    /* ── Launched ───────────────────────────────────────────── */
+    .launched-msg { display:none; flex-direction:column; align-items:center; gap:1rem; }
     .launched-msg h2 {
-      font-family: 'Raleway', sans-serif;
-      font-weight: 700;
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      color: #fff;
-      animation: fadeUp 0.8s ease both;
+      font-family:'Raleway',sans-serif; font-weight:700;
+      font-size:clamp(2rem, 6vw, 3.5rem); color:#fff;
+      animation:fadeUp 0.8s ease both;
     }
-    .launched-msg p {
-      font-size: 1rem;
-      color: rgba(255,255,255,0.6);
-      animation: fadeUp 0.8s ease 0.2s both;
+    .launched-msg p { font-size:1rem; color:rgba(255,255,255,0.6); animation:fadeUp 0.8s ease 0.2s both; }
+
+    /* ── Modal overlay ──────────────────────────────────────── */
+    .modal-overlay {
+      position:fixed;
+      inset:0;
+      z-index:100;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:1rem;
+      background:rgba(6,13,26,0.78);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.25s ease;
+    }
+    .modal-overlay.open { opacity:1; pointer-events:all; }
+
+    .modal {
+      position:relative;
+      width:100%;
+      max-width:clamp(320px, 92vw, 490px);
+      background:rgba(12,22,52,0.95);
+      border:1px solid rgba(255,255,255,0.13);
+      border-radius:22px;
+      padding:clamp(1.4rem, 4vw, 2.2rem);
+      box-shadow:0 24px 80px rgba(0,0,0,0.65), 0 0 0 1px rgba(114,180,225,0.08);
+      transform:scale(0.93) translateY(14px);
+      transition:transform 0.32s cubic-bezier(0.34,1.56,0.64,1);
+      max-height:92vh;
+      overflow-y:auto;
+      scrollbar-width:thin;
+      scrollbar-color:rgba(255,255,255,0.1) transparent;
+    }
+    .modal-overlay.open .modal { transform:scale(1) translateY(0); }
+
+    .modal-close {
+      position:absolute;
+      top:0.9rem; right:0.9rem;
+      width:30px; height:30px;
+      display:flex; align-items:center; justify-content:center;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:50%;
+      color:rgba(255,255,255,0.55);
+      font-size:1rem;
+      cursor:pointer;
+      transition:background 0.15s, color 0.15s;
+      line-height:1;
+    }
+    .modal-close:hover { background:rgba(255,255,255,0.13); color:#fff; }
+
+    .modal-header { margin-bottom:1.3rem; padding-right:2rem; }
+    .modal-title {
+      font-family:'Raleway',sans-serif;
+      font-weight:700;
+      font-size:clamp(1.15rem, 3vw, 1.5rem);
+      color:#fff;
+      margin-bottom:0.3rem;
+    }
+    .modal-subtitle {
+      font-family:'Graphik',sans-serif;
+      font-size:clamp(0.76rem, 1.6vw, 0.86rem);
+      color:rgba(255,255,255,0.48);
+      line-height:1.5;
     }
 
-    /* ── Animations ───────────────────────────────────────────── */
-    @keyframes fadeDown {
-      from { opacity: 0; transform: translateY(-18px); }
-      to   { opacity: 1; transform: translateY(0); }
+    /* ── Form fields ────────────────────────────────────────── */
+    .detail-form { display:flex; flex-direction:column; gap:0.9rem; }
+    .field-group { display:flex; flex-direction:column; gap:0.35rem; }
+    .field-label {
+      font-family:'Graphik',sans-serif;
+      font-size:0.7rem;
+      font-weight:500;
+      letter-spacing:0.1em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,0.4);
     }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(18px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .field-input {
+      width:100%;
+      height:clamp(42px, 4.8vw, 50px);
+      padding:0 1rem;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.11);
+      border-radius:10px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-size:0.9rem;
+      outline:none;
+      transition:border-color 0.2s, background 0.2s, box-shadow 0.2s;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
+    .field-input::placeholder { color:rgba(255,255,255,0.2); }
+    .field-input:focus {
+      border-color:rgba(114,180,225,0.45);
+      background:rgba(255,255,255,0.09);
+      box-shadow:0 0 0 3px rgba(114,180,225,0.1);
     }
 
-    /* ── Responsive ───────────────────────────────────────────── */
+    /* ── Country select ─────────────────────────────────────── */
+    .country-select-wrap { position:relative; }
+    .country-select {
+      width:100%;
+      height:clamp(42px, 4.8vw, 50px);
+      padding:0 2.2rem 0 1rem;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.11);
+      border-radius:10px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-size:0.9rem;
+      outline:none;
+      appearance:none;
+      -webkit-appearance:none;
+      cursor:pointer;
+      transition:border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .country-select option { background:#0f1a3b; color:#fff; }
+    .country-select:focus {
+      border-color:rgba(114,180,225,0.45);
+      background:rgba(255,255,255,0.09);
+      box-shadow:0 0 0 3px rgba(114,180,225,0.1);
+    }
+    .country-arrow {
+      position:absolute;
+      right:0.85rem; top:50%;
+      transform:translateY(-50%);
+      pointer-events:none;
+      color:rgba(255,255,255,0.32);
+    }
+
+    /* ── Phone input ────────────────────────────────────────── */
+    .phone-wrap { display:flex; gap:0.45rem; position:relative; }
+
+    .phone-prefix-btn {
+      display:flex;
+      align-items:center;
+      gap:0.3rem;
+      height:clamp(42px, 4.8vw, 50px);
+      padding:0 0.7rem;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.11);
+      border-radius:10px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-size:0.86rem;
+      cursor:pointer;
+      white-space:nowrap;
+      flex-shrink:0;
+      min-width:86px;
+      transition:border-color 0.2s, background 0.2s;
+      user-select:none;
+    }
+    .phone-prefix-btn:hover { background:rgba(255,255,255,0.09); border-color:rgba(114,180,225,0.3); }
+    .phone-prefix-btn.open { border-color:rgba(114,180,225,0.45); background:rgba(255,255,255,0.09); }
+    .pp-flag { font-size:1.05rem; line-height:1; }
+    .pp-code { font-size:0.82rem; }
+    .pp-chevron { margin-left:auto; color:rgba(255,255,255,0.3); transition:transform 0.2s; }
+    .phone-prefix-btn.open .pp-chevron { transform:rotate(180deg); }
+
+    .prefix-dropdown {
+      position:absolute;
+      top:calc(100% + 6px);
+      left:0;
+      width:clamp(240px, 70vw, 290px);
+      max-height:250px;
+      background:rgba(10,20,48,0.98);
+      border:1px solid rgba(255,255,255,0.13);
+      border-radius:13px;
+      box-shadow:0 14px 44px rgba(0,0,0,0.55);
+      z-index:200;
+      overflow:hidden;
+      display:flex;
+      flex-direction:column;
+      opacity:0;
+      pointer-events:none;
+      transform:translateY(-6px);
+      transition:opacity 0.18s, transform 0.18s;
+    }
+    .prefix-dropdown.open { opacity:1; pointer-events:all; transform:translateY(0); }
+
+    .prefix-search-wrap {
+      padding:0.55rem 0.55rem 0.35rem;
+      border-bottom:1px solid rgba(255,255,255,0.07);
+    }
+    .prefix-search {
+      width:100%;
+      height:34px;
+      padding:0 0.75rem;
+      background:rgba(255,255,255,0.07);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:7px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-size:0.8rem;
+      outline:none;
+    }
+    .prefix-search::placeholder { color:rgba(255,255,255,0.22); }
+    .prefix-search:focus { border-color:rgba(114,180,225,0.4); }
+
+    .prefix-list {
+      overflow-y:auto;
+      flex:1;
+      padding:0.25rem 0;
+      scrollbar-width:thin;
+      scrollbar-color:rgba(255,255,255,0.12) transparent;
+    }
+    .prefix-list::-webkit-scrollbar { width:3px; }
+    .prefix-list::-webkit-scrollbar-thumb { background:rgba(255,255,255,0.12); border-radius:3px; }
+
+    .prefix-item {
+      display:flex;
+      align-items:center;
+      gap:0.55rem;
+      padding:0.45rem 0.75rem;
+      cursor:pointer;
+      font-family:'Graphik',sans-serif;
+      font-size:0.84rem;
+      color:rgba(255,255,255,0.78);
+      transition:background 0.1s;
+    }
+    .prefix-item:hover, .prefix-item.selected { background:rgba(114,180,225,0.13); color:#fff; }
+    .pi-flag { font-size:1rem; line-height:1; flex-shrink:0; }
+    .pi-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .pi-dial { color:rgba(255,255,255,0.35); font-size:0.76rem; flex-shrink:0; }
+
+    .phone-number-input {
+      flex:1;
+      min-width:0;
+      height:clamp(42px, 4.8vw, 50px);
+      padding:0 1rem;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.11);
+      border-radius:10px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-size:0.9rem;
+      outline:none;
+      transition:border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .phone-number-input::placeholder { color:rgba(255,255,255,0.2); }
+    .phone-number-input:focus {
+      border-color:rgba(114,180,225,0.45);
+      background:rgba(255,255,255,0.09);
+      box-shadow:0 0 0 3px rgba(114,180,225,0.1);
+    }
+
+    /* ── Modal submit ───────────────────────────────────────── */
+    .modal-submit-btn {
+      width:100%;
+      height:clamp(46px, 5vw, 52px);
+      margin-top:0.3rem;
+      background:linear-gradient(135deg, var(--blue-primary), var(--blue-mid));
+      border:none;
+      border-radius:12px;
+      color:#fff;
+      font-family:'Graphik',sans-serif;
+      font-weight:500;
+      font-size:clamp(0.86rem, 1.7vw, 0.97rem);
+      letter-spacing:0.03em;
+      cursor:pointer;
+      transition:transform 0.15s, box-shadow 0.15s;
+      box-shadow:0 6px 24px rgba(50,80,148,0.4);
+    }
+    .modal-submit-btn:hover { transform:translateY(-1px); box-shadow:0 8px 32px rgba(50,80,148,0.55); }
+    .modal-submit-btn:active { transform:scale(0.98); }
+    .modal-submit-btn:disabled { opacity:0.55; cursor:not-allowed; transform:none; }
+
+    .form-privacy {
+      text-align:center;
+      font-family:'Graphik',sans-serif;
+      font-size:0.67rem;
+      color:rgba(255,255,255,0.22);
+      margin-top:0.3rem;
+    }
+
+    /* ── Toast ──────────────────────────────────────────────── */
+    .toast {
+      position:fixed;
+      bottom:3.5rem;
+      left:50%;
+      transform:translateX(-50%) translateY(16px);
+      background:rgba(60,130,75,0.96);
+      border:1px solid rgba(191,208,103,0.3);
+      border-radius:12px;
+      padding:0.85rem 1.5rem;
+      font-family:'Graphik',sans-serif;
+      font-size:0.88rem;
+      color:#fff;
+      z-index:300;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity 0.3s, transform 0.3s;
+      backdrop-filter:blur(8px);
+      box-shadow:0 8px 30px rgba(0,0,0,0.4);
+      white-space:nowrap;
+    }
+    .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+    /* ── Animations ─────────────────────────────────────────── */
+    @keyframes fadeDown { from{opacity:0;transform:translateY(-18px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeUp   { from{opacity:0;transform:translateY(18px)}  to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn   { from{opacity:0} to{opacity:1} }
+
+    /* ── Responsive: mobile ≤480px ─────────────────────────── */
     @media (max-width: 480px) {
-      .page { gap: 1.6rem; }
-      .countdown { gap: 0.6rem; }
-      .iso-deco.iso-tr { width: 200px; }
-      .iso-deco.iso-bl { width: 110px; }
+      .page { gap:1rem; padding:1.5rem 1.2rem 4rem; }
+      .logo-wrap img { max-height:104px; }
+      .notify-row { flex-direction:column; }
+      .notify-email-input, .notify-btn { width:100%; height:48px; border-radius:10px; }
+      .notify-email-input { font-size:1rem; }
+      .notify-btn { justify-content:center; font-size:0.95rem; }
+      /* ≥16px previene el zoom automático de iOS en inputs */
+      .field-input, .country-select, .phone-number-input, .prefix-search { font-size:1rem; }
+      .prefix-dropdown { width:calc(100vw - 2.4rem); left:0; }
+      .toast { white-space:normal; text-align:center; max-width:calc(100vw - 2rem); }
+      .modal { border-radius:18px; }
+    }
+
+    /* ── Responsive: teléfonos muy pequeños ≤390px ──────────── */
+    @media (max-width: 390px) {
+      .page { gap:0.7rem; padding:1.1rem 1rem 3.6rem; }
+      .logo-wrap img { max-height:88px; }
+      .headline { font-size:0.88rem; }
+      .claim { font-size:1rem; }
+      .time-value { font-size:2.1rem; }
+      .separator { font-size:1.75rem; }
+      .countdown-wrapper { gap:0.55rem; }
+      .tz-badge { font-size:0.68rem; padding:0.28rem 0.75rem; }
+      .notify-hint { font-size:0.64rem; }
+    }
+
+    /* ── Responsive: landscape mobile (altura corta) ────────── */
+    @media (max-height: 650px) {
+      body { overflow-y:auto; }
+      .page { min-height:unset; justify-content:flex-start; padding-top:3rem; }
+    }
+
+    /* ── Responsive: large displays 1920px+ ─────────────────── */
+    @media (min-width: 1920px) {
+      .logo-wrap img { max-height:380px; max-width:900px; }
+      .page { gap:2.8rem; }
+      .notify-form { max-width:640px; }
+      .notify-email-input, .notify-btn { height:60px; font-size:1.05rem; border-radius:14px; }
+      .modal { max-width:560px; padding:2.6rem; border-radius:26px; }
+      .modal-title { font-size:1.75rem; }
+      .field-input, .country-select, .phone-prefix-btn, .phone-number-input { height:56px; font-size:1rem; }
+      .modal-submit-btn { height:60px; font-size:1.05rem; border-radius:14px; }
+      .prefix-dropdown { width:320px; max-height:300px; }
+    }
+
+    /* ── Responsive: 4K / ultra-wide 2560px+ ───────────────── */
+    @media (min-width: 2560px) {
+      .logo-wrap img { max-height:520px; max-width:1200px; }
+      .page { gap:3.5rem; }
+      .time-value { font-size:clamp(5rem, 8vw, 10rem); }
+      .notify-form { max-width:820px; }
+      .notify-email-input { font-size:1.2rem; height:68px; }
+      .notify-btn { height:68px; font-size:1.1rem; padding:0 2rem; border-radius:16px; }
+      .modal { max-width:640px; padding:3rem; }
+      .modal-title { font-size:2rem; }
+      .field-input, .country-select, .phone-prefix-btn, .phone-number-input { height:62px; font-size:1.1rem; border-radius:12px; }
+      .modal-submit-btn { height:68px; font-size:1.15rem; border-radius:16px; }
+      .prefix-dropdown { width:380px; max-height:360px; }
+      .countdown-label { font-size:0.95rem; letter-spacing:0.22em; }
+      .tz-badge { font-size:1rem; padding:0.55rem 1.4rem; }
+      .footer { font-size:0.85rem; }
     }
   </style>
 </head>
 <body>
 
-
   <main class="page">
 
-    <!-- Logo principal color (protagonista) -->
     <div class="logo-wrap">
       <img src="/logo.png" alt="Qualier Internacional" />
     </div>
 
     <div class="divider"></div>
 
-    <!-- Headline teaser -->
     <p class="headline">
       Algo <strong>importante</strong> está por llegar.
     </p>
 
-    <!-- Claim -->
     <h1 class="claim">
       Medio siglo construyendo confianza.<br />
       <span class="accent">Una nueva marca para liderar el futuro.</span>
     </h1>
 
-    <!-- Countdown -->
     <div class="countdown-wrapper">
       <span class="countdown-label">Lanzamiento oficial</span>
 
@@ -384,16 +715,36 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
         </div>
       </div>
 
-      <!-- Timezone badge (sin emoji de bandera para evitar "CO" en Windows) -->
       <div class="tz-badge">
-        <span>El <strong>25 de mayo</strong> a las</span>
-        <span id="tz-local-time">9:00 a. m.</span>
+        <span>El <strong>1 de junio</strong> a las</span>
+        <span id="tz-local-time">10:00 a.&thinsp;m.</span>
         <span>hora</span>
         <span id="tz-name">local</span>
       </div>
     </div>
 
-    <!-- Mensaje post-lanzamiento -->
+    <!-- Formulario de captura — Paso 1 -->
+    <div class="notify-form" id="notify-form">
+      <div class="notify-row">
+        <input
+          type="email"
+          id="notify-email"
+          class="notify-email-input"
+          placeholder="tucorreo@ejemplo.com"
+          autocomplete="email"
+          inputmode="email"
+        />
+        <button class="notify-btn" id="notify-btn" type="button">
+          <span>Notifícame</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+        </button>
+      </div>
+      <p class="notify-hint">Sin spam &nbsp;·&nbsp; Solo un aviso cuando estemos en vivo</p>
+    </div>
+
     <div class="launched-msg" id="launched-msg">
       <h2>¡Ya es oficial!</h2>
       <p>Bienvenidos a Qualier Internacional.<br />Los de siempre, evolucionados.</p>
@@ -405,48 +756,141 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
     qualierinternacional.com &nbsp;·&nbsp; Proyecto Horizonte 2026
   </footer>
 
+  <!-- Modal — Paso 2 -->
+  <div class="modal-overlay" id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title-id">
+    <div class="modal">
+      <button class="modal-close" id="modal-close" aria-label="Cerrar">&#x2715;</button>
+
+      <div class="modal-header">
+        <h2 class="modal-title" id="modal-title-id">¡Solo un paso más!</h2>
+        <p class="modal-subtitle">Cuéntanos quién eres para notificarte el día del lanzamiento.</p>
+      </div>
+
+      <form class="detail-form" id="detail-form" novalidate>
+
+        <div class="field-group">
+          <label class="field-label" for="field-name">Nombre completo</label>
+          <input type="text" id="field-name" name="name" class="field-input" placeholder="Tu nombre" autocomplete="name" required />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="field-country">País</label>
+          <div class="country-select-wrap">
+            <select id="field-country" name="country" class="country-select">
+              <option value="">Cargando…</option>
+            </select>
+            <svg class="country-arrow" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Teléfono / WhatsApp</label>
+          <div class="phone-wrap" id="phone-wrap">
+            <!-- Botón selector de prefijo -->
+            <div class="phone-prefix-btn" id="phone-prefix-btn" role="button" tabindex="0" aria-haspopup="listbox" aria-expanded="false">
+              <span class="pp-flag" id="pp-flag">🌐</span>
+              <span class="pp-code" id="pp-code">+--</span>
+              <svg class="pp-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <!-- Dropdown de países -->
+            <div class="prefix-dropdown" id="prefix-dropdown" role="listbox">
+              <div class="prefix-search-wrap">
+                <input type="text" class="prefix-search" id="prefix-search" placeholder="Buscar país…" autocomplete="off" />
+              </div>
+              <div class="prefix-list" id="prefix-list"></div>
+            </div>
+            <!-- Número -->
+            <input type="tel" id="phone-number" name="phone" class="phone-number-input" placeholder="300 123 4567" inputmode="tel" autocomplete="tel-national" />
+          </div>
+        </div>
+
+        <button type="submit" class="modal-submit-btn" id="modal-submit-btn">
+          Confirmar registro
+        </button>
+        <p class="form-privacy">Tus datos están seguros y solo se usarán para notificarte.</p>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast confirmación -->
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
   <script define:vars={{ launchISO }}>
+    // ── CONFIG ───────────────────────────────────────────────────
+    // Reemplaza esta URL tras publicar el Apps Script en Google
+    const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwLxzCI_DC0IVjsX4pVdd9Cagaw5CeH5e4pF3kRPI9zMIc72SWdca0xfnOES1dweJEXPA/exec';
+
+    // ── Países con prefijo telefónico ────────────────────────────
+    const COUNTRIES = [
+      // Prioritarias para Qualier
+      { iso:'CO', name:'Colombia',           dial:'+57'  },
+      { iso:'VE', name:'Venezuela',          dial:'+58'  },
+      { iso:'PA', name:'Panamá',            dial:'+507' },
+      { iso:'US', name:'Estados Unidos',    dial:'+1'   },
+      { iso:'MX', name:'México',            dial:'+52'  },
+      { iso:'ES', name:'España',            dial:'+34'  },
+      // América Latina
+      { iso:'AR', name:'Argentina',         dial:'+54'  },
+      { iso:'BO', name:'Bolivia',           dial:'+591' },
+      { iso:'BR', name:'Brasil',            dial:'+55'  },
+      { iso:'CA', name:'Canadá',            dial:'+1'   },
+      { iso:'CL', name:'Chile',             dial:'+56'  },
+      { iso:'CR', name:'Costa Rica',        dial:'+506' },
+      { iso:'CU', name:'Cuba',              dial:'+53'  },
+      { iso:'DO', name:'Rep. Dominicana',   dial:'+1'   },
+      { iso:'EC', name:'Ecuador',           dial:'+593' },
+      { iso:'GT', name:'Guatemala',         dial:'+502' },
+      { iso:'HN', name:'Honduras',          dial:'+504' },
+      { iso:'JM', name:'Jamaica',           dial:'+1'   },
+      { iso:'NI', name:'Nicaragua',         dial:'+505' },
+      { iso:'PE', name:'Perú',             dial:'+51'  },
+      { iso:'PR', name:'Puerto Rico',       dial:'+1'   },
+      { iso:'PY', name:'Paraguay',          dial:'+595' },
+      { iso:'SV', name:'El Salvador',       dial:'+503' },
+      { iso:'TT', name:'Trinidad y Tobago', dial:'+1'   },
+      { iso:'UY', name:'Uruguay',           dial:'+598' },
+      // Europa
+      { iso:'AT', name:'Austria',           dial:'+43'  },
+      { iso:'BE', name:'Bélgica',          dial:'+32'  },
+      { iso:'CH', name:'Suiza',            dial:'+41'  },
+      { iso:'DE', name:'Alemania',          dial:'+49'  },
+      { iso:'FR', name:'Francia',           dial:'+33'  },
+      { iso:'GB', name:'Reino Unido',       dial:'+44'  },
+      { iso:'IE', name:'Irlanda',          dial:'+353' },
+      { iso:'IT', name:'Italia',            dial:'+39'  },
+      { iso:'NL', name:'Países Bajos',     dial:'+31'  },
+      { iso:'PT', name:'Portugal',          dial:'+351' },
+      { iso:'RU', name:'Rusia',            dial:'+7'   },
+      { iso:'SE', name:'Suecia',           dial:'+46'  },
+      // Asia & Oriente Medio
+      { iso:'AE', name:'Emiratos Árabes', dial:'+971' },
+      { iso:'CN', name:'China',             dial:'+86'  },
+      { iso:'IN', name:'India',             dial:'+91'  },
+      { iso:'JP', name:'Japón',            dial:'+81'  },
+      { iso:'KR', name:'Corea del Sur',    dial:'+82'  },
+      { iso:'SA', name:'Arabia Saudita',   dial:'+966' },
+      { iso:'SG', name:'Singapur',         dial:'+65'  },
+      { iso:'TR', name:'Turquía',          dial:'+90'  },
+      // Oceanía
+      { iso:'AU', name:'Australia',         dial:'+61'  },
+      { iso:'NZ', name:'Nueva Zelanda',    dial:'+64'  },
+      // África
+      { iso:'EG', name:'Egipto',           dial:'+20'  },
+      { iso:'NG', name:'Nigeria',           dial:'+234' },
+      { iso:'ZA', name:'Sudáfrica',        dial:'+27'  },
+    ];
+
+    const flag = iso => iso.toUpperCase().split('').map(c => String.fromCodePoint(c.charCodeAt(0) + 127397)).join('');
+
+    // ── Estado ───────────────────────────────────────────────────
+    let capturedEmail   = '';
+    let selectedIso     = '';
+    let selectedDial    = '';
+    let geoFetched      = false;
+
+    // ── Countdown ────────────────────────────────────────────────
     const LAUNCH = new Date(launchISO);
-
-    // ── Timezone detection ──────────────────────────────────────
-    function detectTimezone() {
-      try {
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-        const tzNames = {
-          'America/Caracas':                'Venezuela',
-          'America/Bogota':                 'Colombia',
-          'America/Panama':                 'Panamá',
-          'America/Santo_Domingo':          'Rep. Dominicana',
-          'America/New_York':               'ET (USA)',
-          'America/Chicago':                'CT (USA)',
-          'America/Denver':                 'MT (USA)',
-          'America/Los_Angeles':            'PT (USA)',
-          'America/Mexico_City':            'México',
-          'America/Guayaquil':              'Ecuador',
-          'America/Lima':                   'Perú',
-          'America/Santiago':               'Chile',
-          'America/Argentina/Buenos_Aires': 'Argentina',
-          'America/Sao_Paulo':              'Brasil',
-          'Europe/Madrid':                  'España',
-          'Europe/London':                  'UK',
-        };
-
-        const name = tzNames[tz] ?? 'tu zona horaria';
-        const localTime = LAUNCH.toLocaleTimeString('es', {
-          timeZone: tz,
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        });
-
-        return { name, localTime };
-      } catch {
-        return { name: 'tu zona horaria', localTime: '9:00 a. m.' };
-      }
-    }
-
-    // ── Countdown ───────────────────────────────────────────────
     const pad = n => String(n).padStart(2, '0');
 
     const elDays     = document.getElementById('cd-days');
@@ -456,6 +900,7 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
     const elLaunched = document.getElementById('launched-msg');
     const elCdWrap   = document.querySelector('.countdown-wrapper');
     const elHeadline = document.querySelector('.headline');
+    const elNotify   = document.getElementById('notify-form');
 
     let prevSecs = null;
 
@@ -464,22 +909,21 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
       setTimeout(() => el.classList.remove('tick'), 150);
     }
 
-    function update() {
+    function updateCountdown() {
       const diff = LAUNCH - Date.now();
-
       if (diff <= 0) {
-        elCdWrap.style.display = 'none';
-        elHeadline.textContent = '¡Bienvenidos!';
+        elCdWrap.style.display  = 'none';
+        elNotify.style.display  = 'none';
+        elHeadline.textContent  = '¡Bienvenidos!';
         elLaunched.style.display = 'flex';
-        clearInterval(interval);
+        clearInterval(cdInterval);
         return;
       }
-
-      const totalSecs = Math.floor(diff / 1000);
-      const days  = Math.floor(totalSecs / 86400);
-      const hours = Math.floor((totalSecs % 86400) / 3600);
-      const mins  = Math.floor((totalSecs % 3600) / 60);
-      const secs  = totalSecs % 60;
+      const ts    = Math.floor(diff / 1000);
+      const days  = Math.floor(ts / 86400);
+      const hours = Math.floor((ts % 86400) / 3600);
+      const mins  = Math.floor((ts % 3600) / 60);
+      const secs  = ts % 60;
 
       if (secs !== prevSecs) {
         tickAnim(elSecs);
@@ -487,24 +931,231 @@ const launchISO = "2026-05-25T09:00:00-04:00"; // 9 AM Venezuela (UTC-4) — hor
         if (prevSecs !== null && secs === 59 && mins === 59) tickAnim(elHours);
         prevSecs = secs;
       }
-
       elDays.textContent  = days;
       elHours.textContent = pad(hours);
       elMins.textContent  = pad(mins);
       elSecs.textContent  = pad(secs);
     }
 
-    // ── Timezone badge ──────────────────────────────────────────
-    const tzInfo = detectTimezone();
-    document.getElementById('tz-local-time').textContent = tzInfo.localTime;
-    document.getElementById('tz-name').textContent       = tzInfo.name;
+    // ── Timezone badge ───────────────────────────────────────────
+    (function initTz() {
+      try {
+        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const names = {
+          'America/Bogota':'Colombia','America/Caracas':'Venezuela',
+          'America/Panama':'Panamá','America/Santo_Domingo':'Rep. Dominicana',
+          'America/New_York':'ET (USA)','America/Chicago':'CT (USA)',
+          'America/Denver':'MT (USA)','America/Los_Angeles':'PT (USA)',
+          'America/Mexico_City':'México','America/Guayaquil':'Ecuador',
+          'America/Lima':'Perú','America/Santiago':'Chile',
+          'America/Argentina/Buenos_Aires':'Argentina','America/Sao_Paulo':'Brasil',
+          'Europe/Madrid':'España','Europe/London':'UK',
+        };
+        document.getElementById('tz-name').textContent =
+          names[tz] ?? 'tu zona horaria';
+        document.getElementById('tz-local-time').textContent =
+          LAUNCH.toLocaleTimeString('es', { timeZone:tz, hour:'numeric', minute:'2-digit', hour12:true });
+      } catch {}
+    })();
 
-    update();
-    const interval = setInterval(update, 1000);
+    updateCountdown();
+    const cdInterval = setInterval(updateCountdown, 1000);
 
-    // ── Reveal suave — espera a que las fuentes estén listas ────
-    document.fonts.ready.then(() => {
-      setTimeout(() => document.body.classList.add('ready'), 60);
+    document.fonts.ready.then(() => setTimeout(() => document.body.classList.add('ready'), 60));
+
+    // ── Poblar select de países ──────────────────────────────────
+    const countrySelect = document.getElementById('field-country');
+    countrySelect.innerHTML = '<option value="">Selecciona tu país</option>';
+    COUNTRIES.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.iso;
+      o.textContent = `${flag(c.iso)} ${c.name}`;
+      countrySelect.appendChild(o);
+    });
+
+    // ── Geolocalización por IP ───────────────────────────────────
+    async function detectCountry() {
+      if (geoFetched) return;
+      geoFetched = true;
+      try {
+        const r = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+        const d = await r.json();
+        if (d && d.country_code) applyCountry(d.country_code.toUpperCase());
+      } catch { /* silencioso — el usuario selecciona manualmente */ }
+    }
+
+    function applyCountry(iso) {
+      const opt = [...countrySelect.options].find(o => o.value === iso);
+      if (opt) countrySelect.value = iso;
+      const c = COUNTRIES.find(x => x.iso === iso);
+      if (c) setPrefix(c);
+    }
+
+    // ── Phone prefix dropdown ────────────────────────────────────
+    const prefixBtn  = document.getElementById('phone-prefix-btn');
+    const prefixDrop = document.getElementById('prefix-dropdown');
+    const prefixSrch = document.getElementById('prefix-search');
+    const prefixList = document.getElementById('prefix-list');
+
+    function setPrefix(c) {
+      selectedIso  = c.iso;
+      selectedDial = c.dial;
+      document.getElementById('pp-flag').textContent = flag(c.iso);
+      document.getElementById('pp-code').textContent = c.dial;
+    }
+
+    function renderList(q = '') {
+      const lq = q.toLowerCase();
+      const list = q
+        ? COUNTRIES.filter(c =>
+            c.name.toLowerCase().includes(lq) ||
+            c.dial.includes(lq) ||
+            c.iso.toLowerCase().includes(lq))
+        : COUNTRIES;
+
+      prefixList.innerHTML = '';
+      list.forEach(c => {
+        const el = document.createElement('div');
+        el.className = 'prefix-item' + (c.iso === selectedIso ? ' selected' : '');
+        el.setAttribute('role', 'option');
+        el.innerHTML =
+          `<span class="pi-flag">${flag(c.iso)}</span>` +
+          `<span class="pi-name">${c.name}</span>` +
+          `<span class="pi-dial">${c.dial}</span>`;
+        el.addEventListener('mousedown', e => { e.preventDefault(); setPrefix(c); closePrefix(); });
+        prefixList.appendChild(el);
+      });
+    }
+
+    function openPrefix() {
+      prefixDrop.classList.add('open');
+      prefixBtn.classList.add('open');
+      prefixBtn.setAttribute('aria-expanded', 'true');
+      prefixSrch.value = '';
+      renderList();
+      prefixSrch.focus();
+    }
+
+    function closePrefix() {
+      prefixDrop.classList.remove('open');
+      prefixBtn.classList.remove('open');
+      prefixBtn.setAttribute('aria-expanded', 'false');
+    }
+
+    prefixBtn.addEventListener('click', () =>
+      prefixDrop.classList.contains('open') ? closePrefix() : openPrefix()
+    );
+    prefixBtn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPrefix(); }
+    });
+    prefixSrch.addEventListener('input', () => renderList(prefixSrch.value));
+    document.addEventListener('click', e => {
+      if (!e.target.closest('#phone-wrap')) closePrefix();
+    });
+
+    // ── Modal ────────────────────────────────────────────────────
+    const overlay    = document.getElementById('modal-overlay');
+    const modalClose = document.getElementById('modal-close');
+
+    function openModal() {
+      overlay.classList.add('open');
+      document.body.classList.add('modal-open');
+      detectCountry();
+      setTimeout(() => document.getElementById('field-name').focus(), 320);
+    }
+    function closeModal() {
+      overlay.classList.remove('open');
+      document.body.classList.remove('modal-open');
+      closePrefix();
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // ── Paso 1: validar email y abrir modal ──────────────────────
+    const notifyBtn   = document.getElementById('notify-btn');
+    const notifyEmail = document.getElementById('notify-email');
+
+    function shakeInvalid(el) {
+      const orig = el.style.borderColor;
+      el.style.borderColor = 'rgba(251,216,73,0.7)';
+      el.style.boxShadow   = '0 0 0 3px rgba(251,216,73,0.13)';
+      el.focus();
+      setTimeout(() => { el.style.borderColor = ''; el.style.boxShadow = ''; }, 1800);
+    }
+
+    notifyBtn.addEventListener('click', () => {
+      const v = notifyEmail.value.trim();
+      if (!v || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { shakeInvalid(notifyEmail); return; }
+      capturedEmail = v;
+      openModal();
+    });
+    notifyEmail.addEventListener('keydown', e => { if (e.key === 'Enter') notifyBtn.click(); });
+
+    // ── Paso 2: enviar datos ─────────────────────────────────────
+    const detailForm = document.getElementById('detail-form');
+    const submitBtn  = document.getElementById('modal-submit-btn');
+    const toast      = document.getElementById('toast');
+    let toastTimer   = null;
+
+    function showToast(msg, ok = true) {
+      toast.textContent = msg;
+      toast.style.background = ok
+        ? 'rgba(60,130,75,0.96)'
+        : 'rgba(160,50,50,0.96)';
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 4500);
+    }
+
+    detailForm.addEventListener('submit', async e => {
+      e.preventDefault();
+
+      const name    = document.getElementById('field-name').value.trim();
+      const country = countrySelect.value;
+      const num     = document.getElementById('phone-number').value.trim();
+      const phone   = num ? `${selectedDial} ${num}` : selectedDial;
+
+      if (!name) { shakeInvalid(document.getElementById('field-name')); return; }
+
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Enviando…';
+
+      const payload = {
+        email:     capturedEmail,
+        name,
+        country,
+        phone,
+        timestamp: new Date().toISOString(),
+        timezone:  Intl.DateTimeFormat().resolvedOptions().timeZone,
+      };
+
+      try {
+        if (APPS_SCRIPT_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+          console.log('[Demo] Registro:', payload);
+          await new Promise(r => setTimeout(r, 800));
+        } else {
+          await fetch(APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode:   'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=UTF-8' },
+            body:   JSON.stringify(payload),
+          });
+        }
+
+        closeModal();
+        showToast('✓ ¡Listo! Te avisamos el día del lanzamiento.');
+        detailForm.reset();
+        notifyEmail.value     = '';
+        submitBtn.textContent = 'Confirmar registro';
+        submitBtn.disabled    = false;
+
+      } catch {
+        submitBtn.textContent = 'Reintentar';
+        submitBtn.disabled    = false;
+        showToast('Ocurrió un error. Por favor inténtalo de nuevo.', false);
+      }
     });
   </script>
 
